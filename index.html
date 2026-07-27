@@ -1633,6 +1633,15 @@ window.FACTORY_TERMS = {
 
 window.TERM_KEYS = Object.keys(window.FACTORY_TERMS).sort((a, b) => b.length - a.length);
 
+// CSS for dynamic switching based on Google Translate state
+const style = document.createElement('style');
+style.textContent = `
+  .e2e-term .en-term { display: none; }
+  html.translated-ltr .e2e-term .vi-term { display: none; }
+  html.translated-ltr .e2e-term .en-term { display: inline; color: var(--ac); }
+`;
+document.head.appendChild(style);
+
 window.applyTerminology = function(rootNode) {
   if (!rootNode) return;
   
@@ -1651,36 +1660,32 @@ window.applyTerminology = function(rootNode) {
       
       if (matched) {
         let parent = node.parentNode;
-        // Skip if already processed or inside Google Translate nodes
-        if (parent && parent.classList && parent.classList.contains('notranslate')) return;
+        if (parent && parent.classList && (parent.classList.contains('notranslate') || parent.classList.contains('e2e-term'))) return;
         if (parent && parent.closest && parent.closest('.goog-te-combo')) return;
         
         let span = document.createElement('span');
         let html = txt;
-        // Simple replace - we escape characters to avoid XSS just in case, though it's already DOM text
         html = html.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
         
         for (let k of window.TERM_KEYS) {
            let safeK = k.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-           // Replace with English directly but mark it notranslate so Google ignores it
-           html = html.split(safeK).join(`<span class="notranslate" style="color:var(--ac);">${window.FACTORY_TERMS[k]}</span>`);
+           let enTerm = window.FACTORY_TERMS[k];
+           html = html.split(safeK).join(
+             `<span class="e2e-term notranslate"><span class="vi-term">${safeK}</span><span class="en-term">${enTerm}</span></span>`
+           );
         }
         span.innerHTML = html;
         
-        // replaceChild expects the new nodes. span.innerHTML might create multiple child nodes
-        // insert all children of span before node, then remove node
         while(span.firstChild) {
           parent.insertBefore(span.firstChild, node);
         }
         parent.removeChild(node);
       }
     } else if (node.nodeType === 1) {
-      if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.classList.contains('notranslate')) return;
+      if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.classList.contains('notranslate') || node.classList.contains('e2e-term')) return;
       
       let children = Array.from(node.childNodes);
-      for (let child of children) {
-        walk(child);
-      }
+      for (let child of children) walk(child);
     }
   }
   
