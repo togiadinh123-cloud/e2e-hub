@@ -649,7 +649,7 @@ ul.dot>li::before{content:"♥";position:absolute;left:0;top:-1px;color:var(--ac
       <button class="ib" id="railBtn" title="Thu gọn / mở mục lục" aria-label="Thu gọn mục lục">&#8676;</button>
       <button class="ib" id="backBtn" title="Quay lại" aria-label="Quay lại" hidden>&#8592;</button>
       <div class="path"><b id="bcTitle">Mục lục</b></div>
-      <button class="ib" id="langBtn" title="Đổi ngôn ngữ / Change language" aria-label="Đổi ngôn ngữ">EN</button>
+      <div id="google_translate_element" style="display:inline-block; margin: 0 8px;"></div>
       <button class="ib" id="skinBtn" title="Đổi giao diện" aria-label="Đổi giao diện">&#10022;</button>
       <button class="ib" id="findBtn2" title="Tìm nhanh (Ctrl K)" aria-label="Tìm nhanh">&#8981;</button>
     </div>
@@ -1617,175 +1617,74 @@ KB.faq = KB.faq.map(function (f) {
 </script>
 <script>
 /* ==========================================================================
-   lang.js — Dictionary for EN/VI and basic replace tool
+   lang.js — Factory Terminology Preprocessor for Google Translate
    ========================================================================== */
-window.I18N = {
-  en: {
-    // UI strings from site.js
-    "Mục lục": "Table of Contents",
-    "Đọc tất cả một mạch": "Read All",
-    "Hỏi & đáp": "FAQ",
-    "Bản đồ E2E theo khu vực": "E2E Map by Area",
-    "Danh mục hệ thống": "Systems Directory",
-    "Quy trình từng bước": "Step-by-step Workflows",
-    "Ai chịu trách nhiệm": "Responsibility",
-    "Các dashboard": "Dashboards",
-    "Công thức tính": "Formulas",
-    "Địa chỉ & đường dẫn ERP": "ERP Links",
-    "Tài khoản & thiết bị": "Accounts & Devices",
-    "Đọc lại 22 tài liệu": "Read 22 Original Docs",
-    "Kế hoạch chuyển giao": "Handover Plan",
-    "Thuật ngữ": "Glossary",
-    "Toàn bộ nội dung trang này, liệt kê thành danh sách": "All content on this page, listed as a directory",
-    "Gộp mọi phần vào một trang dài để cuộn hoặc in ra": "Combine all parts into one long page to scroll or print",
-    "Những câu hay bị hỏi nhất, đã trả lời sẵn": "Most frequently asked questions, answered",
-    "Từ kho nguyên vật liệu tới kho thành phẩm, khu nào dùng hệ thống nào": "From RM warehouse to FG warehouse, mapping systems to areas",
-    "Chức năng, người phát triển, vấn đề còn mở, mức triển khai 4 nhà máy": "Functions, developers, open issues, deployment in 4 factories",
-    "Bấm gì, nhập gì, theo đúng thứ tự trong guideline": "What to click, what to input, in the exact order from guidelines",
-    "Owner, developer, user, monitor của từng hệ thống": "Owner, developer, user, monitor of each system",
-    "Nội bộ và cho khách hàng, khác nhau ở đâu": "Internal and for customers, what's the difference",
-    "Mọi URL và đường dẫn menu xuất hiện trong tài liệu": "All URLs and menu paths appearing in the documents",
-    "Quy ước đăng nhập từng hệ thống, thiết bị đang giữ": "Login conventions for each system, devices in possession",
-    "Nguyên văn từng slide, từng bảng, từng ghi chú": "Verbatim slides, tables, and notes",
-    "Khung đánh giá của adidas: 4 trụ, 10 điểm, thang 0→4": "adidas assessment framework: 4 pillars, 10 pts, scale 0→4",
-    "5 tuần endorsement và những việc còn treo": "5 weeks of endorsement and pending tasks",
-    "Giải nghĩa từ viết tắt theo đúng ngữ cảnh nhà máy": "Abbreviation meanings specific to factory context",
-    "Tìm nhanh (Ctrl K)": "Quick Search (Ctrl K)",
-    "Đổi giao diện": "Change Skin",
-    "Quay lại": "Back",
-    "Thu gọn / mở mục lục": "Toggle TOC",
-    "Mở mục lục": "Open TOC",
-    "Lên đầu trang": "Scroll to Top",
-    "Dựng từ 22 file nguồn của Digital Team: 19 bài guideline · SPIKE 2026 Engineering Roadmap · Endorsement.xlsx · Trang Endorsement Plan.xlsx": "Built from 22 Digital Team source files: 19 guidelines · SPIKE 2026 Roadmap · Endorsement.xlsx",
-    "Trang tĩnh, không gọi mạng. Mọi nội dung mở sẵn — mã ở cuối mỗi khối trỏ về slide/dòng gốc.": "Static page, offline. Content is open — codes at block ends refer to original slide/row.",
-    
-    // Systems page
-    "lọc — tuỳ chọn": "filter — optional",
-    "tên hệ thống, developer, vấn đề…": "system name, developer, issue...",
-    "mọi nhà máy": "all factories",
-    "mọi khu vực": "all areas",
-    "còn vấn đề": "open issues",
-    "chưa phủ hết": "partial coverage",
-    "bỏ lọc": "clear filter",
-    "Độ phủ theo nhà máy": "Coverage by Factory",
-    "Mỗi hàng một hệ thống, mỗi cột một nhà máy. Màu càng đậm càng phủ rộng. Chấm đỏ trước tên = hệ thống còn vấn đề đang mở. Bấm tên để mở chi tiết.": "Rows = systems, Columns = factories. Darker color = broader coverage. Red dot = open issue. Click to expand.",
-    "Từng hệ thống": "Individual Systems",
-    "Không có hệ thống nào khớp bộ lọc. Bấm “bỏ lọc” để xem lại tất cả.": "No systems match the filter. Click 'clear filter' to see all.",
-    "Hệ thống": "System",
-    "ổn": "good",
-    "vấn đề": "issue",
-    "Bài": "Doc",
-    "Khu vực": "Area",
-    "Bộ phận sử dụng": "User Dept",
-    "Người phát triển": "Developer",
-    "Đang update": "Updating",
-    "Vấn đề hiện tại": "Current Issue",
-    "không ghi nhận": "none recorded",
-    "Việc phải làm tiếp": "Next Actions",
-    "Ghi chú": "Remarks",
-    "Người dùng": "User",
-    "Theo dõi": "Monitor",
-    "Báo lỗi qua": "Report bugs via",
-    "Mức triển khai": "Deployment Level",
-    "Nhà máy": "Factory",
-    "Mức độ": "Level",
-    "Trách nhiệm chuẩn": "Standard Responsibilities",
-    "Tài liệu gốc": "Original Doc",
-    "Xem quy trình": "View Workflow",
-    "bước": "steps",
-    
-    // Map / Areas
-    "Đang dùng": "In Use",
-    "đại trà": "mass",
-    "Chưa dùng": "Not Used",
-    "Pilot": "Pilot",
-    "Một phần": "Partial",
-    "Đại trà": "Mass",
-    "Xem dạng bảng số": "View as Data Table",
-    "Phạm vi": "Scope",
-    "Áp dụng ở đâu": "Applied Where",
-    "cái dùng cho cả 4 nhà máy": "used in all 4 factories",
-    
-    // Factory terms
-    "Kho nguyên vật liệu": "Raw Material Warehouse",
-    "Kho NVL": "RM Warehouse",
-    "Chặt & xử lý": "Cutting & Treatment",
-    "Chặt": "Cutting",
-    "May": "Stitching",
-    "Gò đế": "Lasting",
-    "Ráp": "Assembly",
-    "Kho thành phẩm": "Finished Goods Warehouse",
-    "Kho TP": "FG Warehouse",
-
-    // Default texts
-    "Không có hệ thống nào khớp bộ lọc.": "No systems match the filter."
-  }
+window.FACTORY_TERMS = {
+  "Kho nguyên vật liệu": "Raw Material Warehouse",
+  "Kho NVL": "RM Warehouse",
+  "Chặt & xử lý": "Cutting & Treatment",
+  "Chặt": "Cutting",
+  "May": "Stitching",
+  "Gò đế": "Lasting",
+  "Ráp": "Assembly",
+  "Kho thành phẩm": "Finished Goods Warehouse",
+  "Kho TP": "FG Warehouse"
 };
 
-window.LANG = localStorage.getItem('e2e-lang') || 'vi';
+window.TERM_KEYS = Object.keys(window.FACTORY_TERMS).sort((a, b) => b.length - a.length);
 
-window.setLang = function(l) {
-  window.LANG = l;
-  localStorage.setItem('e2e-lang', l);
-  document.getElementById('langBtn').textContent = l === 'en' ? 'VI' : 'EN';
+window.applyTerminology = function(rootNode) {
+  if (!rootNode) return;
   
-  if (l === 'vi') {
-    location.reload();
-    return;
-  }
-  
-  if (window.render) window.render();
-  if (window.buildToc) window.buildToc();
-  if (window.buildTabs) window.buildTabs();
-  
-  window.translateDOM(document.getElementById('bar'));
-  window.translateDOM(document.querySelector('.foot'));
-  window.translateDOM(document.getElementById('pal'));
-};
-
-window.translateDOM = function(node) {
-  if (window.LANG === 'vi' || !node) return;
-  
-  if (node.nodeType === 3) {
-    let txt = node.nodeValue;
-    if (!txt.trim()) return;
-    
-    if (!window.EN_KEYS) {
-       window.EN_KEYS = Object.keys(window.I18N.en).sort((a,b) => b.length - a.length);
-    }
-    
-    let changed = false;
-    for (let k of window.EN_KEYS) {
-      if (txt.includes(k)) {
-         txt = txt.split(k).join(window.I18N.en[k]);
-         changed = true;
+  function walk(node) {
+    if (node.nodeType === 3) {
+      let txt = node.nodeValue;
+      if (!txt.trim()) return;
+      
+      let matched = false;
+      for (let k of window.TERM_KEYS) {
+        if (txt.includes(k)) {
+          matched = true;
+          break;
+        }
+      }
+      
+      if (matched) {
+        let parent = node.parentNode;
+        // Skip if already processed or inside Google Translate nodes
+        if (parent && parent.classList && parent.classList.contains('notranslate')) return;
+        if (parent && parent.closest && parent.closest('.goog-te-combo')) return;
+        
+        let span = document.createElement('span');
+        let html = txt;
+        // Simple replace - we escape characters to avoid XSS just in case, though it's already DOM text
+        html = html.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        
+        for (let k of window.TERM_KEYS) {
+           let safeK = k.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+           // Replace with English directly but mark it notranslate so Google ignores it
+           html = html.split(safeK).join(`<span class="notranslate" style="color:var(--ac);">${window.FACTORY_TERMS[k]}</span>`);
+        }
+        span.innerHTML = html;
+        
+        // replaceChild expects the new nodes. span.innerHTML might create multiple child nodes
+        // insert all children of span before node, then remove node
+        while(span.firstChild) {
+          parent.insertBefore(span.firstChild, node);
+        }
+        parent.removeChild(node);
+      }
+    } else if (node.nodeType === 1) {
+      if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE' || node.classList.contains('notranslate')) return;
+      
+      let children = Array.from(node.childNodes);
+      for (let child of children) {
+        walk(child);
       }
     }
-    if (changed) node.nodeValue = txt;
-  } else if (node.nodeType === 1) {
-    if (node.tagName === 'SCRIPT' || node.tagName === 'STYLE') return;
-    
-    ['placeholder', 'aria-label', 'title', 'data-tip'].forEach(attr => {
-       if (node.hasAttribute(attr)) {
-         let txt = node.getAttribute(attr);
-         if (!window.EN_KEYS) {
-            window.EN_KEYS = Object.keys(window.I18N.en).sort((a,b) => b.length - a.length);
-         }
-         let changed = false;
-         for (let k of window.EN_KEYS) {
-           if (txt.includes(k)) {
-              txt = txt.split(k).join(window.I18N.en[k]);
-              changed = true;
-           }
-         }
-         if (changed) node.setAttribute(attr, txt);
-       }
-    });
-
-    for (let i = 0; i < node.childNodes.length; i++) {
-      window.translateDOM(node.childNodes[i]);
-    }
   }
+  
+  walk(rootNode);
 };
 
 /* ==========================================================================
@@ -2391,7 +2290,7 @@ function render() {
   syncTabs(page); syncBack(page, sub); flashProg(); countUp();
   bind(page, sub, sub2);
   if (innerWidth <= 1040) shutToc();
-  if (window.LANG === 'en' && window.translateDOM) window.translateDOM($('#view'));
+  if (window.applyTerminology) window.applyTerminology($('#view'));
 }
 
 function bind(page, sub, sub2) {
@@ -2500,7 +2399,7 @@ function buildToc() {
     return h;
   }).join('')}`;
   $('#findBtn').onclick = openPal;
-  if (window.LANG === 'en' && window.translateDOM) window.translateDOM($('#toc'));
+  if (window.applyTerminology) window.applyTerminology($('#toc'));
 }
 const showToc = () => { $('#toc').classList.add('on'); $('#scr').classList.add('on'); };
 const shutToc = () => { $('#toc').classList.remove('on'); $('#scr').classList.remove('on'); };
@@ -2527,7 +2426,7 @@ function buildTabs() {
     if (b.dataset.tab === 'find') { openPal(); return; }
     location.hash = '#' + b.dataset.tab;
   });
-  if (window.LANG === 'en' && window.translateDOM) window.translateDOM($('#tabs'));
+  if (window.applyTerminology) window.applyTerminology($('#tabs'));
 }
 function syncTabs(page) {
   let at = -1;
@@ -2609,7 +2508,7 @@ function wireSwipe() {
 function openPane(html) {
   const paneBody = $('#paneBody');
   paneBody.innerHTML = html;
-  if (window.LANG === 'en' && window.translateDOM) window.translateDOM(paneBody);
+  if (window.applyTerminology) window.applyTerminology(paneBody);
   $('#pane').hidden = false; document.body.style.overflow = 'hidden'; wireCopy(paneBody);
 }
 function shutPane() {
@@ -2677,12 +2576,6 @@ function init() {
   setSkin(LS.get('e2e-skin') === 'y2k' ? 'y2k' : 'jelly');
   skinBtn.onclick = () => setSkin(document.documentElement.getAttribute('data-skin') === 'y2k' ? 'jelly' : 'y2k');
   
-  const langBtn = $('#langBtn');
-  if (langBtn) {
-    langBtn.textContent = window.LANG === 'en' ? 'VI' : 'EN';
-    langBtn.onclick = () => window.setLang(window.LANG === 'en' ? 'vi' : 'en');
-  }
-  
   $('#menuBtn').onclick = showToc;
   $('#scr').onclick = shutToc;
   $('#findBtn2').onclick = openPal;
@@ -2705,6 +2598,9 @@ function init() {
     }
   });
   addEventListener('scroll', () => $('#top').classList.toggle('on', scrollY > 600));
+  
+  if (window.applyTerminology) window.applyTerminology(document.body);
+  
   addEventListener('hashchange', render);
   render();
 }
@@ -2712,6 +2608,12 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else init();
 
 </script>
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'vi', includedLanguages: 'en,vi', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
